@@ -2,7 +2,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Card, Divider, CardHeader, Input, CardBody, Checkbox, CardFooter, Button } from "@nextui-org/react"
 import { axiosInstance } from "../lib/axios";
-//import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { IsAuth } from '../hoc/authDataHoc.jsx'
 import { z } from "zod";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,6 +17,7 @@ const loginFormSchema = z.object({
 })
 
 function LoginPage() {
+	const dispatch = useDispatch()
 	const [showPassword, setShowPassword] = useState(false);
 	
 	const togglePassword = () => {
@@ -31,6 +33,12 @@ function LoginPage() {
 		resolver: zodResolver(loginFormSchema),
 	});
 	
+	function login(authData) {
+		dispatch({
+			type: "LOGIN",
+			payload: { authData },
+		})	
+	}
     
 	
 	const loginUser = async (data) => {
@@ -38,9 +46,12 @@ function LoginPage() {
 			const response = await axiosInstance.post("/auth/login", data);
 			const token = response.data.data.token;
 			const decoded = jwtDecode(token);
-			const combined = { ...decoded, token };
+			const combined = { ...decoded, token, username: data.username };
 			if(response.data.status.code === 201){
 				toast.success("Anda berhasil masuk")
+				setTimeout(() => {
+					login(combined)
+				}, 1000)
 			}else{
 				toast.error("Username atau password salah")
 			}
@@ -130,4 +141,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default IsAuth(LoginPage);

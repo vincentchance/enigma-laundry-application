@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 function SideBar(){
 	const location = useLocation();
 	
-	const isActive = (path) => location.pathname === path;
+	const isActive = (path) => location.pathname.startsWith(path);
 	return (
 		<div className="w-64 bg-white border-3 fixed h-full">
 			<div className="my-2 mb-4 ml-1">
@@ -13,7 +13,7 @@ function SideBar(){
 			</div>
 			<hr/>
 			<ul className="mt-3 font-bold">
-				<li className="text-[17px] pl-2 mb-1"> HOME </li>
+				<li className="text-[17px] pl-2 mb-1"> DASHBOARD </li>
 				<li className={`mb-2 rounded py-2  ${isActive('/dashboard') ? 'bg-blue-500 text-white': ''}`}>
 					<Link to="/dashboard">
 						<FaListCheck className="inline-block w-6 h-6 mr-2 -mt-2 ml-2"></FaListCheck>

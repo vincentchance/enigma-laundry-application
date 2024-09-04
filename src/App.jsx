@@ -12,7 +12,7 @@ function App() {
 		<Toaster position="top-center" />
 		<Routes>
 			<Route element={<LoginPage />} path="/" />
-			<Route element={<Dashboard />} path="/dashboard" />
+			<Route element={<Dashboard />} path="/dashboard/:username" />
 			<Route element={<RegisterPage />} path="/register" />
 		</Routes>
 	</>

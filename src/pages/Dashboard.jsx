@@ -2,10 +2,14 @@ import React from 'react';
 import Footer from '../components/Footer.jsx';
 import Navbar from '../components/Navbar.jsx';
 import SideBar from '../components/SideBar.jsx';
-//import { IsAuth } from '../hoc/checkAuth.jsx';
+import { NotAuth } from '../hoc/authDataHoc.jsx';
+import { useSelector } from 'react-redux';
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
 
 function Dashboard() {
+		const authData = useSelector((state) => state.auth.authData);
+
+		console.log('Auth Data:', authData);
 	return (
 	<>
 		<SideBar />
@@ -37,4 +41,4 @@ function Dashboard() {
 	)
 }
 
-export default Dashboard;
+export default NotAuth(Dashboard);
