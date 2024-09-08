@@ -8,7 +8,11 @@ export default {
 	"./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+		screens: {
+			'md-mx': {'max': '767px'}
+		},
+	},
   },
   darkMode: "class",
   plugins: [

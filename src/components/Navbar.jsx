@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import { Link, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import { Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
@@ -24,8 +24,8 @@ function Navbar(){
 					</Avatar>
 				</DropdownTrigger>
 				<DropdownMenu aria-label="User Actions" variant="flat">
-					<DropdownItem key="profile" className="h-7">
-						<p className="font-semibold">Signed in as {username}</p>
+					<DropdownItem key="profile" className="h-10">
+						<p className="font-semibold">Signed as {username}</p>
 					</DropdownItem>
 					<DropdownItem key="logout" color="danger" className="h-7">
 						<Link onClick={logout} className="font-semibold">logout</Link>
