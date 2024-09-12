@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../components/Footer.jsx';
 import Navbar from '../components/Navbar.jsx';
 import SideBar from '../components/SideBar.jsx';
@@ -8,16 +8,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
 
 function Dashboard() {
+	const [showBillDetail, setShowBillDetail] = useState('');
+	const [selectedCustomer, setSelectedCustomer] = useState(null);
 	const dispatch = useDispatch()
 	const token = useSelector((state) => state.auth.authData.token);
 	const transactions = useSelector((state) => state.bill.transactions)
-	console.log(transactions)
 	const setTransactionData = (transaction) => {
 		dispatch({
 			type: "SET_TRANSACTIONS",
 			payload: { transaction },
 		})
 	}
+	
 	const getTransaction = async () => {
 		try {
 			const headers = {
@@ -25,7 +27,6 @@ function Dashboard() {
 			}
 			const response = await axiosInstance.get("/bills", { headers })
 			const transactions = response.data.data;
-			console.log(transactions)
 			const newCustomerDataTransaction = {};
 			//jika tak ada customerId belum ada di newCustomerDataTransaction, tambahkan properti baru
 			transactions.forEach((transaction) => {
@@ -34,12 +35,7 @@ function Dashboard() {
 			if(!newCustomerDataTransaction[customerId]) {
 				newCustomerDataTransaction[customerId] = {
 					...transaction.customer, //copy semua properti customer 
-					//"id": "b32eed7d-052a-4711-bcad-0bc577654883",
-					// "name": "Ana Marsyani",
-					//"phoneNumber": "7398291200",
-					//"address": "Jakarta Barat",
-					//"createdAt": "2024-09-08T14:12:22.3146977+07:00",
-					//"updatedAt": "2024-09-08T14:12:22.3146977+07:00"
+					
 					transactions: [], //tambahkan properti transactions yang akan menampung daftar transaksi
 					transactionCount: 0, //tambahkan properti transactionsCount untuk menghitung jumlah transaksi
 				};
@@ -48,16 +44,32 @@ function Dashboard() {
 			newCustomerDataTransaction[customerId].transactions.push(transaction)
 			//Tingkatkan jumlah transaksi pelanggan
 			newCustomerDataTransaction[customerId].transactionCount += 1;
-			console.log(`Updated customer ${customerId} with new transaction:`, newCustomerDataTransaction[customerId])
 			});
-			console.log("Final newCustomerDataTransaction: ", newCustomerDataTransaction);
+
 			setTransactionData(newCustomerDataTransaction);
 		} catch (error){
 			console.log(error.message);
 		}			
 	};
+	const handleSwitchBacktoMain = () => {
+		setShowBillDetail('daftar transaksi')
+	}
 
-
+	const handleCustomerDetail = (customerData) => {
+		setShowBillDetail('riwayat transaksi');
+		setSelectedCustomer(customerData);
+	}
+	
+	const formatDate = (dateString) => {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('id-ID', {
+			year: 'numeric',
+			month: '2-digit',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+		});
+	};
 	
 	/*const getCustomers = async () => {
 		try {
@@ -75,6 +87,7 @@ function Dashboard() {
     getTransaction();
     }, []);
 	
+	
 	const generateCustomerCode = (index) => {
 		const prefix = "LDSF0";
 		const baseNumber = 2241;
@@ -86,23 +99,25 @@ function Dashboard() {
 		<SideBar />
 		<div className="md-mx:ml-52 md:ml-64">
 				<Navbar />
-			<div className="flex bg-white justify-between p-5">
-				<h1 className="font-semibold text-2xl">Daftar Transaksi</h1>
-				<Button>Tambah transaksi</Button>
-			</div>
-			<div className="pb-[5rem]">
-				<Table aria-label="Example static collection table">
-					<TableHeader>
-						<TableColumn>Kode Pelanggan</TableColumn>
-						<TableColumn>Nama Pelanggan</TableColumn>
-						<TableColumn>Tabel Transaksi</TableColumn>
-					</TableHeader>
-					<TableBody>
-					{ Object.values(transactions).map((customer, index) => {
+			{showBillDetail === 'daftar transaksi' ? (
+			<>
+				<div className="flex bg-white justify-between p-5">
+					<h1 className="font-semibold text-2xl">Daftar Transaksi</h1>
+					<Button>Tambah transaksi</Button>
+				</div>
+				<div className="pb-[5rem]">
+					<Table aria-label="transaction list table">
+						<TableHeader>
+							<TableColumn>Kode Pelanggan</TableColumn>
+							<TableColumn>Nama Pelanggan</TableColumn>
+							<TableColumn>Tabel Transaksi</TableColumn>
+						</TableHeader>
+						<TableBody>
+						{ Object.values(transactions).map((customer, index) => {
 							return (
 							<TableRow key={index + 1}>
 								<TableCell>
-									<span className={`${(index + 1) % 2 === 0 ? 'bg-blue-400' : 'bg-red-400'} rounded-2xl p-1 m-1 border-t-1 text-white`}>
+									<span className={`${(index + 1) % 2 === 0 ? 'bg-teal-300' : 'bg-red-400'} rounded-2xl p-1 m-1 border-t-1 text-white`}>
 										{generateCustomerCode(index)}
 									</span>
 								</TableCell>
@@ -110,13 +125,64 @@ function Dashboard() {
 										   <br />
 										   {customer.transactionCount} transaksi
 								</TableCell>
-								<TableCell><Button className="bg-slate-600 text-white">lihat Transaksi</Button></TableCell>
+								<TableCell>
+									<Button 
+									className="bg-slate-600 text-white"
+									onClick={() => handleCustomerDetail(customer)}>
+									lihat Transaksi
+									</Button>
+								</TableCell>
 							</TableRow>
-							);
-					})}
-					</TableBody>
-				</Table>
-			</div>
+							)})};
+						</TableBody>
+					</Table>
+				</div>
+			</>
+			) : (
+			<>
+			<div className="flex bg-white justify-center p-5">
+					<h1 className="font-semibold text-2xl">
+						Riwayat transaksi {selectedCustomer?.name}
+					</h1>
+				</div>
+				<div className="pb-[5rem]">
+					<Table aria-label="transaction detail table">
+						<TableHeader>
+							<TableColumn>Kode Transaksi</TableColumn>
+							<TableColumn>Tanggal Transaksi</TableColumn>
+							<TableColumn>Paket Laundry</TableColumn>
+							<TableColumn>Qty</TableColumn>
+							<TableColumn>Total Bayar</TableColumn>
+						</TableHeader>
+						<TableBody>
+						{ selectedCustomer?.transactions.map((transaction, index) => {
+							return (
+								<TableRow key={index + 1}>
+									<TableCell>
+										<span className={`${(index + 1) % 2 === 0 ? 'bg-red-400' : 'bg-teal-300' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
+											{`TRL-${transaction.id.slice(0,8).match(/\d+/g).join('')}`}
+										</span>
+									</TableCell>
+									<TableCell>{formatDate(transaction.billDate)}</TableCell>
+									<TableCell>{transaction.billDetails.map((item) => item.product.name)}</TableCell>
+									<TableCell>{`${transaction.billDetails.map((item) => item.qty)} ${transaction.billDetails.map((item) => item.product.type)}`}</TableCell>
+									<TableCell>{new Intl.NumberFormat('id-ID', {
+                                            style: 'currency',
+                                            currency: 'IDR',
+                                            minimumFractionDigits: 0,
+                                        }).format(
+                                            transaction.billDetails.reduce((acc, item) => acc + item.price * item.qty, 0)
+                                        )}</TableCell>
+							</TableRow>
+							)})};
+						</TableBody>
+					</Table>
+					<div className="flex pr-3 pt-3 justify-end">
+						<Button onClick={handleSwitchBacktoMain}>Kembali</Button>
+					</div>
+				</div>
+			</>
+			) }
 		</div>
 		<Footer />
 	</>
