@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaUserCircle } from "react-icons/fa";
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
@@ -20,7 +19,6 @@ function Navbar(){
 			<Dropdown>
 				<DropdownTrigger>
 					<Avatar>
-						<FaUserCircle className="w-6 h-6 mt-1 mr-5" />
 					</Avatar>
 				</DropdownTrigger>
 				<DropdownMenu aria-label="User Actions" variant="flat">
