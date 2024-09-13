@@ -5,14 +5,15 @@ import SideBar from '../components/SideBar.jsx';
 import { NotAuth } from '../hoc/authDataHoc.jsx';
 import { axiosInstance } from '../lib/axios.js'
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
+import { Button, Table, Select, SelectItem, TableHeader, TableColumn, TableBody, TableRow, TableCell, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
 
 function Dashboard() {
-	const [showBillDetail, setShowBillDetail] = useState('');
-	const [selectedCustomer, setSelectedCustomer] = useState(null);
+	const {isOpen, onOpen, onOpenChange} = useDisclosure();
 	const dispatch = useDispatch()
 	const token = useSelector((state) => state.auth.authData.token);
 	const transactions = useSelector((state) => state.bill.transactions)
+	const [showBillDetail, setShowBillDetail] = useState('daftar transaksi');
+	const [selectedCustomer, setSelectedCustomer] = useState(null);
 	const setTransactionData = (transaction) => {
 		dispatch({
 			type: "SET_TRANSACTIONS",
@@ -103,7 +104,35 @@ function Dashboard() {
 			<>
 				<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-2xl">Daftar Transaksi</h1>
-					<Button>Tambah transaksi</Button>
+					<Button onPress={onOpen}>Tambah transaksi</Button>
+					<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+						<ModalContent>
+						{(onClose) => (
+						<>
+							<ModalHeader className="flex flex-col gap-1">Buat Transaksi Baru</ModalHeader>
+							<ModalBody>
+								<Select
+									placeholder="Pilih konsumen">
+									<SelectItem>pilihan satu</SelectItem>
+								</Select>
+								<p>
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+									Nullam pulvinar risus non risus hendrerit venenatis.
+									Pellentesque sit amet hendrerit risus, sed porttitor quam.
+								</p>
+							</ModalBody>
+							<ModalFooter>
+								<Button color="danger" variant="light" onPress={onClose}>
+								Close
+								</Button>
+								<Button color="primary" onPress={onClose}>
+								Action
+								</Button>
+							</ModalFooter>
+						</>
+						)}
+						</ModalContent>
+					</Modal>
 				</div>
 				<div className="pb-[5rem]">
 					<Table aria-label="transaction list table">
@@ -140,7 +169,7 @@ function Dashboard() {
 			</>
 			) : (
 			<>
-			<div className="flex bg-white justify-center p-5">
+				<div className="flex bg-white justify-center p-5">
 					<h1 className="font-semibold text-2xl">
 						Riwayat transaksi {selectedCustomer?.name}
 					</h1>
@@ -173,7 +202,7 @@ function Dashboard() {
                                         }).format(
                                             transaction.billDetails.reduce((acc, item) => acc + item.price * item.qty, 0)
                                         )}</TableCell>
-							</TableRow>
+								</TableRow>
 							)})};
 						</TableBody>
 					</Table>
