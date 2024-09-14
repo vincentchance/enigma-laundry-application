@@ -25,8 +25,8 @@ function Navbar(){
 					<DropdownItem key="profile" className="h-10">
 						<p className="font-semibold">Signed as {username}</p>
 					</DropdownItem>
-					<DropdownItem key="logout" color="danger" className="h-7">
-						<Link onClick={logout} className="font-semibold">logout</Link>
+					<DropdownItem onPress={logout} key="logout" color="danger" className=" h-7">
+						<p className="font-semibold text-red-700">Log out</p>
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
