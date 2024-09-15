@@ -4,7 +4,7 @@ const DEFAULT_STATE = {
 
 export const customerReducer = (state = DEFAULT_STATE, action) => {
 	switch(action.type) {
-		case "SET-CUSTOMERS":
+		case "SET_CUSTOMERS":
 			return { ...state , customers: action.payload.customers };
 		default:
 			return state

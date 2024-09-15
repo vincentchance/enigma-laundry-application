@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import Footer from '../components/Footer.jsx';
 import Navbar from '../components/Navbar.jsx';
 import SideBar from '../components/SideBar.jsx';
@@ -6,20 +7,52 @@ import { NotAuth } from '../hoc/authDataHoc.jsx';
 import { axiosInstance } from '../lib/axios.js'
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Table, Select, SelectItem, TableHeader, TableColumn, TableBody, TableRow, TableCell, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from 'zod';
 
+const transactionSchema = z.object({
+	customerId: z.string().nonempty("Anda belum memilih nama konsumen"),
+	productId: z.string().nonempty("Anda belum memilih produk"),
+	quantity: z.number().min(1, "jumlah tak boleh kosong")
+})
 function Dashboard() {
 	const {isOpen, onOpen, onOpenChange} = useDisclosure();
 	const dispatch = useDispatch()
-	const token = useSelector((state) => state.auth.authData.token);
-	const transactions = useSelector((state) => state.bill.transactions)
 	const [showBillDetail, setShowBillDetail] = useState('daftar transaksi');
 	const [selectedCustomer, setSelectedCustomer] = useState(null);
+	//action
+	const setProductData = (products) => {
+		dispatch({
+			type: "SET_PRODUCT",
+			payload: { products },
+		})
+	}
 	const setTransactionData = (transaction) => {
 		dispatch({
 			type: "SET_TRANSACTIONS",
 			payload: { transaction },
 		})
 	}
+	const setCustomerData = (customers) => {
+		dispatch({
+			type: "SET_CUSTOMERS",
+			payload: { customers },
+		})
+	}
+	//redux state
+	const token = useSelector((state) => state.auth.authData.token);
+	const transactions = useSelector((state) => state.bill.transactions)
+	const customers = useSelector((state) => state.customer.customers)
+	const products = useSelector((state) => state.products.products)
+	
+	const form = useForm({
+		defaultValues: {
+			customerId: "",
+			productId: "",
+			quantity: 0,
+		},
+		resolver: zodResolver(transactionSchema)
+	});
 	
 	const getTransaction = async () => {
 		try {
@@ -72,7 +105,20 @@ function Dashboard() {
 		});
 	};
 	
-	/*const getCustomers = async () => {
+	const getProducts = async () => {
+		try{
+			const headers = {
+				Authorization: `Bearer ${token}`,
+			};
+			const response = await axiosInstance.get("/products", { headers });
+			console.log(response.data.data)
+			setProductData(response.data.data)
+		}catch (error) {
+			console.log(error.message)
+		}
+	}
+	
+	const getCustomers = async () => {
 		try {
 			const headers = {
 			Authorization: `Bearer ${token}`,
@@ -82,10 +128,12 @@ function Dashboard() {
 		} catch (error) {
 			console.log(error.message);
 		}
-	}*/
+	}
 	
 	useEffect(() => {
     getTransaction();
+	getProducts();
+	getCustomers();
     }, []);
 	
 	
@@ -111,15 +159,41 @@ function Dashboard() {
 						<>
 							<ModalHeader className="flex flex-col gap-1">Buat Transaksi Baru</ModalHeader>
 							<ModalBody>
-								<Select
-									placeholder="Pilih konsumen">
-									<SelectItem>pilihan satu</SelectItem>
-								</Select>
-								<p>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-									Nullam pulvinar risus non risus hendrerit venenatis.
-									Pellentesque sit amet hendrerit risus, sed porttitor quam.
-								</p>
+								<label className="font-semibold text-sm">
+									Nama konsumen
+								</label>
+								<Controller
+									name="customerId"
+									control={form.control}
+									render={({ field, fieldState }) => {
+										return <Select {...field}
+												placeholder="Pilih konsumen"
+												className="mb-2"
+												isInvalid={Boolean(fieldState.error)}
+												errorMessage={fieldState.error?.message}>
+												{customers.map((customer, index) => (
+													<SelectItem key={customer.id} value={customer.id}>{customer.name}</SelectItem>
+												))}
+												</Select>
+									}}
+								/>
+								<label className="font-semibold text-sm">
+									Nama produk
+								</label>
+								<Controller
+									name="productId"
+									control={form.control}
+									render={({ field, fieldState }) => {
+										return <Select {...field}
+												placeholder="Pilih produk"
+												isInvalid={Boolean(fieldState.error)}
+												errorMessage={fieldState.error?.message}>
+												{products.map((product, index) => (
+													<SelectItem key={product.id} value={product.id}>{product.name}</SelectItem>
+												))}
+												</Select>
+									}}
+								/>
 							</ModalBody>
 							<ModalFooter>
 								<Button color="danger" variant="light" onPress={onClose}>
