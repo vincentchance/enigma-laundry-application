@@ -6,7 +6,7 @@ import SideBar from '../components/SideBar.jsx';
 import { NotAuth } from '../hoc/authDataHoc.jsx';
 import { axiosInstance } from '../lib/axios.js'
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Table, Select, SelectItem, TableHeader, TableColumn, TableBody, TableRow, TableCell, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+import { Button, Table, Input, Select, SelectItem, TableHeader, TableColumn, TableBody, TableRow, TableCell, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod';
 
@@ -54,6 +54,9 @@ function Dashboard() {
 		resolver: zodResolver(transactionSchema)
 	});
 	
+	const selectedProduct = form.watch("productId");
+	const quantity = form.watch("quantity");
+	
 	const getTransaction = async () => {
 		try {
 			const headers = {
@@ -79,7 +82,7 @@ function Dashboard() {
 			//Tingkatkan jumlah transaksi pelanggan
 			newCustomerDataTransaction[customerId].transactionCount += 1;
 			});
-
+			console.log(newCustomerDataTransaction)
 			setTransactionData(newCustomerDataTransaction);
 		} catch (error){
 			console.log(error.message);
@@ -128,6 +131,26 @@ function Dashboard() {
 		} catch (error) {
 			console.log(error.message);
 		}
+	}	
+	const createTransaction = async (data) => {
+		console.log(data)
+		const headers = {
+			Authorization: `Bearer ${token}`
+		};
+		const requestData = {
+			customerId: data.customerId,
+			billDetails: [
+					{
+					product: {
+						id: data.productId
+					},
+					qty: data.quantity
+				}
+			]
+		};
+		const response = await axiosInstance.post("/bills", requestData, { headers });
+		const newTrans = response.data.data
+		console.log(newTrans)
 	}
 	
 	useEffect(() => {
@@ -135,6 +158,15 @@ function Dashboard() {
 	getProducts();
 	getCustomers();
     }, []);
+	
+	const formatRupiah = (value) => {
+        return value.toLocaleString('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+    };
 	
 	
 	const generateCustomerCode = (index) => {
@@ -159,134 +191,153 @@ function Dashboard() {
 						<>
 							<ModalHeader className="flex flex-col gap-1">Buat Transaksi Baru</ModalHeader>
 							<ModalBody>
-								<label className="font-semibold text-sm">
-									Nama konsumen
-								</label>
-								<Controller
-									name="customerId"
-									control={form.control}
-									render={({ field, fieldState }) => {
-										return <Select {...field}
-												placeholder="Pilih konsumen"
-												className="mb-2"
-												isInvalid={Boolean(fieldState.error)}
-												errorMessage={fieldState.error?.message}>
-												{customers.map((customer, index) => (
-													<SelectItem key={customer.id} value={customer.id}>{customer.name}</SelectItem>
-												))}
-												</Select>
-									}}
-								/>
-								<label className="font-semibold text-sm">
-									Nama produk
-								</label>
-								<Controller
-									name="productId"
-									control={form.control}
-									render={({ field, fieldState }) => {
-										return <Select {...field}
-												placeholder="Pilih produk"
-												isInvalid={Boolean(fieldState.error)}
-												errorMessage={fieldState.error?.message}>
-												{products.map((product, index) => (
-													<SelectItem key={product.id} value={product.id}>{product.name}</SelectItem>
-												))}
-												</Select>
-									}}
-								/>
-							</ModalBody>
-							<ModalFooter>
-								<Button color="danger" variant="light" onPress={onClose}>
-								Close
-								</Button>
-								<Button color="primary" onPress={onClose}>
-								Action
-								</Button>
-							</ModalFooter>
-						</>
-						)}
-						</ModalContent>
-					</Modal>
-				</div>
-				<div className="pb-[5rem]">
-					<Table aria-label="transaction list table">
-						<TableHeader>
-							<TableColumn>Kode Pelanggan</TableColumn>
-							<TableColumn>Nama Pelanggan</TableColumn>
-							<TableColumn>Tabel Transaksi</TableColumn>
-						</TableHeader>
-						<TableBody>
-						{ Object.values(transactions).map((customer, index) => {
-							return (
-							<TableRow key={index + 1}>
-								<TableCell>
-									<span className={`${(index + 1) % 2 === 0 ? 'bg-teal-300' : 'bg-red-400'} rounded-2xl p-1 m-1 border-t-1 text-white`}>
-										{generateCustomerCode(index)}
-									</span>
-								</TableCell>
-								<TableCell>{customer.name}
-										   <br />
-										   {customer.transactionCount} transaksi
-								</TableCell>
-								<TableCell>
-									<Button 
-									className="bg-slate-600 text-white"
-									onClick={() => handleCustomerDetail(customer)}>
-									lihat Transaksi
-									</Button>
-								</TableCell>
-							</TableRow>
-							)})};
-						</TableBody>
-					</Table>
-				</div>
-			</>
-			) : (
-			<>
-				<div className="flex bg-white justify-center p-5">
-					<h1 className="font-semibold text-2xl">
-						Riwayat transaksi {selectedCustomer?.name}
-					</h1>
-				</div>
-				<div className="pb-[5rem]">
-					<Table aria-label="transaction detail table">
-						<TableHeader>
-							<TableColumn>Kode Transaksi</TableColumn>
-							<TableColumn>Tanggal Transaksi</TableColumn>
-							<TableColumn>Paket Laundry</TableColumn>
-							<TableColumn>Qty</TableColumn>
-							<TableColumn>Total Bayar</TableColumn>
-						</TableHeader>
-						<TableBody>
-						{ selectedCustomer?.transactions.map((transaction, index) => {
-							return (
+									<label className="font-semibold text-sm">
+										Nama konsumen
+									</label>
+									<Controller
+										name="customerId"
+										control={form.control}
+										render={({ field, fieldState }) => {
+											return <Select {...field}
+													placeholder="Pilih nama konsumen"
+													className="mb-2"
+													isInvalid={Boolean(fieldState.error)}
+													errorMessage={fieldState.error?.message}>
+													{customers.map((customer, index) => (
+														<SelectItem key={customer.id} value={customer.id}>{customer.name}</SelectItem>
+													))}
+													</Select>
+										}}
+									/>
+									<label className="font-semibold text-sm">
+										Nama paket laundry
+									</label>
+									<Controller
+										name="productId"
+										control={form.control}
+										render={({ field, fieldState }) => {
+											return <Select {...field}
+													className="mb-2"
+													placeholder="Pilih paket laundry"
+													isInvalid={Boolean(fieldState.error)}
+													errorMessage={fieldState.error?.message}>
+													{products.map((product, index) => (
+														<SelectItem key={product.id} value={product.id}>{product.name}</SelectItem>
+													))}
+													</Select>
+										}}
+									/>
+									<label className="font-semibold text-sm">
+										Qty (Kg)
+									</label>
+									<Controller 
+										name="quantity"
+										control={form.control}
+										render={({ field, fieldState }) => {
+											return <Input {...field}
+														className="mb-2"
+														type="number"
+														onChange={(e) => field.onChange(e.target.valueAsNumber)}
+														isInvalid={Boolean(fieldState.error)}
+														errorMessage={fieldState.error?.message}/>
+										}}
+									/>
+									<label className="font-semibold text-sm">
+										Total
+									</label>
+									<Input type="text"
+										   className="mb-2"
+										   value={formatRupiah(products.find((product) => product.id === selectedProduct)?.price * quantity || 0)} disabled/>
+								</ModalBody>
+								<ModalFooter>
+									<div className="flex justify-end">
+										<Button type="submit" onPress={form.handleSubmit(createTransaction)}>Buat transaksi</Button>
+									</div>
+								</ModalFooter>
+							</>
+							)}
+							</ModalContent>
+						</Modal>
+					</div>
+					<div className="pb-[5rem]">
+						<Table aria-label="transaction list table">
+							<TableHeader>
+								<TableColumn>Kode Pelanggan</TableColumn>
+								<TableColumn>Nama Pelanggan</TableColumn>
+								<TableColumn>Tabel Transaksi</TableColumn>
+							</TableHeader>
+							<TableBody>
+							{ Object.values(transactions).map((customer, index) => {
+								return (
 								<TableRow key={index + 1}>
 									<TableCell>
-										<span className={`${(index + 1) % 2 === 0 ? 'bg-red-400' : 'bg-teal-300' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
-											{`TRL-${transaction.id.slice(0,8).match(/\d+/g).join('')}`}
+										<span className={`${(index + 1) % 2 === 0 ? 'bg-teal-300' : 'bg-red-400'} rounded-2xl p-1 m-1 border-t-1 text-white`}>
+											{generateCustomerCode(index)}
 										</span>
 									</TableCell>
-									<TableCell>{formatDate(transaction.billDate)}</TableCell>
-									<TableCell>{transaction.billDetails.map((item) => item.product.name)}</TableCell>
-									<TableCell>{`${transaction.billDetails.map((item) => item.qty)} ${transaction.billDetails.map((item) => item.product.type)}`}</TableCell>
-									<TableCell>{new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            minimumFractionDigits: 0,
-                                        }).format(
-                                            transaction.billDetails.reduce((acc, item) => acc + item.price * item.qty, 0)
-                                        )}</TableCell>
+									<TableCell>{customer.name}
+										   <br />
+										   {customer.transactionCount} transaksi
+									</TableCell>
+									<TableCell>
+										<Button 
+										className="bg-slate-600 text-white"
+										onClick={() => handleCustomerDetail(customer)}>
+										lihat Transaksi
+										</Button>
+									</TableCell>
 								</TableRow>
-							)})};
-						</TableBody>
-					</Table>
-					<div className="flex pr-3 pt-3 justify-end">
-						<Button onClick={handleSwitchBacktoMain}>Kembali</Button>
+								)})};
+							</TableBody>
+						</Table>
 					</div>
-				</div>
-			</>
-			) }
-		</div>
+				</>
+				) : (
+				<>
+					<div className="flex bg-white justify-center p-5">
+						<h1 className="font-semibold text-2xl">
+							Riwayat transaksi {selectedCustomer?.name}
+						</h1>
+					</div>
+					<div className="pb-[5rem]">
+						<Table aria-label="transaction detail table">
+							<TableHeader>
+								<TableColumn>Kode Transaksi</TableColumn>
+								<TableColumn>Tanggal Transaksi</TableColumn>
+								<TableColumn>Paket Laundry</TableColumn>
+								<TableColumn>Qty</TableColumn>
+								<TableColumn>Total Bayar</TableColumn>
+							</TableHeader>
+							<TableBody>
+							{ selectedCustomer?.transactions.map((transaction, index) => {
+								return (
+									<TableRow key={index + 1}>
+										<TableCell>
+											<span className={`${(index + 1) % 2 === 0 ? 'bg-red-400' : 'bg-teal-300' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
+												{`TRL-${transaction.id.slice(0,8).match(/\d+/g).join('')}`}
+											</span>
+										</TableCell>
+										<TableCell>{formatDate(transaction.billDate)}</TableCell>
+										<TableCell>{transaction.billDetails.map((item) => item.product.name)}</TableCell>
+										<TableCell>{`${transaction.billDetails.map((item) => item.qty)} ${transaction.billDetails.map((item) => item.product.type)}`}</TableCell>
+										<TableCell>{new Intl.NumberFormat('id-ID', {
+												style: 'currency',
+												currency: 'IDR',
+												minimumFractionDigits: 0,
+											}).format(
+												transaction.billDetails.reduce((acc, item) => acc + item.price * item.qty, 0)
+											)}</TableCell>
+									</TableRow>
+							)})};
+							</TableBody>
+						</Table>
+						<div className="flex pr-3 pt-3 justify-end">
+							<Button onPress={handleSwitchBacktoMain}>Kembali</Button>
+						</div>
+					</div>
+				</>
+				) }
+			</div>
 		<Footer />
 	</>
 	)
