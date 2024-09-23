@@ -6,7 +6,7 @@ import SideBar from '../components/SideBar.jsx';
 import { NotAuth } from '../hoc/authDataHoc.jsx';
 import { axiosInstance } from '../lib/axios.js'
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Table, Input, Select, SelectItem, TableHeader, TableColumn, TableBody, TableRow, TableCell, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+import { Button, Table, Input, Select, SelectItem, TableHeader, TableColumn, TableBody, TableRow, TableCell, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod';
 
@@ -16,10 +16,10 @@ const transactionSchema = z.object({
 	quantity: z.number().min(1, "jumlah tak boleh kosong")
 })
 function Dashboard() {
-	const {isOpen, onOpen, onOpenChange} = useDisclosure();
 	const dispatch = useDispatch()
 	const [showBillDetail, setShowBillDetail] = useState('daftar transaksi');
 	const [selectedCustomer, setSelectedCustomer] = useState(null);
+	const [showModal, setShowModal] = useState(false);
 	//action
 	const setProductData = (products) => {
 		dispatch({
@@ -39,6 +39,7 @@ function Dashboard() {
 			payload: { customers },
 		})
 	}
+	
 	//redux state
 	const token = useSelector((state) => state.auth.authData.token);
 	const transactions = useSelector((state) => state.bill.transactions)
@@ -131,26 +132,39 @@ function Dashboard() {
 		} catch (error) {
 			console.log(error.message);
 		}
-	}	
+	}
+		
+	const closeModal = () => {
+		setShowModal(false)
+	};
+  
 	const createTransaction = async (data) => {
-		console.log(data)
-		const headers = {
+		try {
+			const headers = {
 			Authorization: `Bearer ${token}`
 		};
 		const requestData = {
 			customerId: data.customerId,
-			billDetails: [
-					{
-					product: {
-						id: data.productId
-					},
-					qty: data.quantity
-				}
-			]
-		};
-		const response = await axiosInstance.post("/bills", requestData, { headers });
-		const newTrans = response.data.data
-		console.log(newTrans)
+				billDetails: [
+						{
+						product: {
+							id: data.productId
+						},
+						qty: data.quantity
+					}
+				]
+			};
+			const response = await axiosInstance.post("/bills", requestData, { headers });
+			const newTrans = response.data.data
+			if(response.status === 201) {
+				setTimeout(() => {
+					closeModal()
+					location.reload()
+				}, 200)
+			}
+		}catch (error) {
+			console.log(error.message)
+		}
 	}
 	
 	useEffect(() => {
@@ -184,10 +198,10 @@ function Dashboard() {
 			<>
 				<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-2xl">Daftar Transaksi</h1>
-					<Button onPress={onOpen}>Tambah transaksi</Button>
-					<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+					<Button onPress={()=> setShowModal(true)}>Tambah transaksi</Button>
+					<Modal isOpen={showModal}>
 						<ModalContent>
-						{(onClose) => (
+						{() => (
 						<>
 							<ModalHeader className="flex flex-col gap-1">Buat Transaksi Baru</ModalHeader>
 							<ModalBody>
@@ -250,9 +264,8 @@ function Dashboard() {
 										   value={formatRupiah(products.find((product) => product.id === selectedProduct)?.price * quantity || 0)} disabled/>
 								</ModalBody>
 								<ModalFooter>
-									<div className="flex justify-end">
 										<Button type="submit" onPress={form.handleSubmit(createTransaction)}>Buat transaksi</Button>
-									</div>
+										<Button color="danger" onPress={closeModal}>Batal</Button>
 								</ModalFooter>
 							</>
 							)}
