@@ -12,8 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import NavbarEnigma from '../components/NavbarEnigma.jsx';
 
 const loginFormSchema = z.object({
-	username: z.string().min(3, "username paling sedikit punya 3 karakter").min(1,"username tak boleh kosong"),
-	password: z.string().min(8, "password paling sedikit punya 8 karakter").min(1,"password tak boleh kosong"),
+	username: z.string().min(3, "username paling sedikit punya 3 karakter").nonempty("username tak boleh kosong"),
+	password: z.string().min(8, "password paling sedikit punya 8 karakter").nonempty("password tak boleh kosong"),
 })
 
 function LoginPage() {

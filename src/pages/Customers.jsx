@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import SideBar from '../components/SideBar.jsx';
+import ModalCustomerCreate from './modal/ModalCustomerCreate.jsx';
 import { axiosInstance } from '../lib/axios.js';
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
+import { NotAuth } from '../hoc/authDataHoc.jsx';
 import {
   Dropdown,
   DropdownTrigger,
@@ -14,6 +16,10 @@ import {
 } from "@nextui-org/react"
 
 function Customers() {
+	const [showModal, setShowModal] = useState(false);
+	function closeModal() {
+		setShowModal(false)
+	}
 	const dispatch = useDispatch()
 	const setCustomerData = (customers) => {
 		dispatch({
@@ -46,8 +52,9 @@ function Customers() {
 		<div className="md-mx:ml-52 md:ml-64">
 			<Navbar />
 			<div className="flex bg-white justify-between p-5">
-					<h1 className="font-semibold text-2xl">Daftar nama pelanggan</h1>
-					<Button>Daftar pelanggan baru</Button>
+					<h1 className="font-semibold text-xl">Daftar nama pelanggan</h1>
+					<Button onPress={() => setShowModal(true)}>Daftar pelanggan baru</Button> {/*buat Modal disini untuk menambahkan pelanggan baru*/}
+					<ModalCustomerCreate isOpen={showModal} closeModal={closeModal} />
 			</div>
 			<div className="pb-[5rem]">
 				<Table>
@@ -78,7 +85,7 @@ function Customers() {
 											</Button>
 										</DropdownTrigger>
 											<DropdownMenu aria-label="Static Actions">
-												<DropdownItem key="edit">Edit file</DropdownItem>
+												<DropdownItem key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
 												<DropdownItem key="delete" className="text-danger" color="danger">
 												  Delete file
 												</DropdownItem>
@@ -97,4 +104,4 @@ function Customers() {
 }
 
 
-export default Customers;
+export default NotAuth(Customers);
