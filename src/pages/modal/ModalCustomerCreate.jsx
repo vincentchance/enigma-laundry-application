@@ -2,28 +2,43 @@ import React from 'react';
 import { Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../lib/axios.js"
 import { z } from 'zod';	
 
 
 const createCustomerSchema = z.object({
-	name: z.string().nonempty('nama tak boleh kosong').min(5, "nama paling sedikit punya 5 karakter"),
-	phoneNumber: z.string().nonempty('no telepon tak boleh kosong').min(11, "no telepon harus punya 8 karakter"),
-	address: z.string().nonempty('alamat tak boleh kosong').min(12, "alamat harus diisi dengan lengkap"),
+	name: z.string().min(5, "nama paling sedikit punya 5 karakter"),
+	phoneNumber: z.string().min(8, "no telepon harus punya 8 karakter"),
+	address: z.string().min(12, "alamat harus diisi dengan lengkap"),
 })
 
 function ModalCustomerCreate({ isOpen, closeModal }) {
+		const token = useSelector((state) => state.auth.authData.token)
+		console.log(token)
 		const form = useForm({
-			defaultValues: {
-				name: "",
-				phoneNumber: "",
-				address: "",
-			},
-			resolver: zodResolver(createCustomerSchema)
+			resolver: zodResolver(createCustomerSchema),
+			mode: "onChange"
 		});
 		
-		function createCustomer(data){
-			console.log(data)
+		const createCustomer = async data => {
+			try{
+				const headers = {
+				Authorization: `Bearer ${token}`
+				}
+				console.log(data)
+				const sender = await axiosInstance.post("/customers", data, { headers })
+				const response = sender.data.data
+				console.log(response)
+					if(sender.status === 201) {
+						setTimeout(() => {
+							closeModal()
+							location.reload()
+						}, 200)
+					}
+			}catch (error){
+				console.log(error.message)
+			}
 		}
 	
 	return (
@@ -57,6 +72,7 @@ function ModalCustomerCreate({ isOpen, closeModal }) {
 								render={({ field, fieldState }) => (
 										<Input {...field} 
 										placeholder="0812######"
+										type="number"
 										isInvalid={Boolean(fieldState.error)}
 										errorMessage={fieldState.error?.message}
 										/>
@@ -82,7 +98,7 @@ function ModalCustomerCreate({ isOpen, closeModal }) {
 					</ModalBody>
 					<ModalFooter>
 						<Button onPress={closeModal} color="danger">Batal</Button>
-						<Button onpress={form.handleSubmit(createCustomer)} type="submit" color="primary">submit</Button>
+						<Button onPress={form.handleSubmit(createCustomer)} type="submit" color="primary">submit</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>

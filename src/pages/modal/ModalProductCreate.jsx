@@ -8,23 +8,39 @@ import { z } from 'zod';
 
 const createProductSchema = z.object({
 	name: z.string().nonempty('kolom nama tak boleh kosong').min(4, "nama paling sedikit punya 4 karakter"),
-	price: z.string().nonempty('kolom harga tak boleh kosong'),
+	price: z.number().min(5000, "harga dimulai dari 5000"),
 	type: z.string().nonempty('kolom ini harus dipilih')
 })
 function ModalProductCreate({ isOpen, closeModal }) {
+		const token = useSelector((state) => state.auth.authData.token)
 		const dispatch = useDispatch();
 		const form = useForm({
 			defaultValues: {
 				name: "",
-				price: "",
+				price: 5000,
 				type: "",
 			},
 			resolver: zodResolver(createProductSchema)
 		});
 		const satuanBerat = [ "Kg", "Pcs"]
 		console.log(satuanBerat)
-		function createProduct(data){
-			console.log(data);
+		
+		const createProduct = async data => {
+			try{
+				const headers = {
+				Authorization: `Bearer ${token}`
+				}
+				console.log(data)
+				const sender = await axiosInstance.post("/products", data, { headers })
+					if(sender.status === 201) {
+						setTimeout(() => {
+							closeModal()
+							location.reload()
+						}, 200)
+					}
+			}catch (error){
+				console.log(error.message)
+			}
 		}
 		
 	return (
@@ -58,7 +74,9 @@ function ModalProductCreate({ isOpen, closeModal }) {
 								render={({ field, fieldState }) => (
 										<Input {...field} 
 										placeholder="isi harga paket"
+										type="number"
 										isInvalid={Boolean(fieldState.error)}
+										onChange={(e) => field.onChange(e.target.valueAsNumber)}
 										errorMessage={fieldState.error?.message}
 										/>
 									)
@@ -66,7 +84,7 @@ function ModalProductCreate({ isOpen, closeModal }) {
 							/>
 						</div>
 						<div className="mb-4">
-							<label className="font-semibold">Tipe (berat)</label>
+							<label className="font-semibold">Tipe (satuan)</label>
 							<Controller
 										name="type"
 										control={form.control}

@@ -20,6 +20,7 @@ function Products() {
 	const token = useSelector((state) => state.auth.authData.token);
 	const products = useSelector((state) => state.products.products);
 	console.log(products)
+	
 	const getProducts = async () => {
 		try{
 			const headers = {
@@ -32,6 +33,10 @@ function Products() {
 			console.log(error.message)
 		}
 	}
+	useEffect(() => {
+		getProducts()
+	}, []);
+	
 	return (
 	<>
 		<SideBar />
