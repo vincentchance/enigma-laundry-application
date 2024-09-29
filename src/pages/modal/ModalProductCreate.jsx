@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 const createProductSchema = z.object({
 	name: z.string().nonempty('kolom nama tak boleh kosong').min(4, "nama paling sedikit punya 4 karakter"),
-	price: z.number().min(5000, "harga dimulai dari 5000"),
+	price: z.number().min(5000, "harga minimal dari 5000"),
 	type: z.string().nonempty('kolom ini harus dipilih')
 })
 function ModalProductCreate({ isOpen, closeModal }) {

@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import SideBar from '../components/SideBar.jsx';
 import ModalCustomerCreate from './modal/ModalCustomerCreate.jsx';
+import ModalCustomerEdit from './modal/ModalCustomerEdit.jsx';
 import { axiosInstance } from '../lib/axios.js';
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
 import { NotAuth } from '../hoc/authDataHoc.jsx';
@@ -17,8 +18,14 @@ import {
 
 function Customers() {
 	const [showModal, setShowModal] = useState(false);
+	const [showEditModal, setShowEditModal] = useState(false);
+	const [selectedCustomer, setSelectedCustomer] = useState(null);
 	function closeModal() {
 		setShowModal(false)
+	}
+	function handleEditModal(){
+		setShowEditModal(true);
+		setSelectedCustomer(null);
 	}
 	const dispatch = useDispatch()
 	const setCustomerData = (customers) => {
@@ -85,12 +92,13 @@ function Customers() {
 											</Button>
 										</DropdownTrigger>
 											<DropdownMenu aria-label="Static Actions">
-												<DropdownItem key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
+												<DropdownItem onPress={handleEditModal} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
 												<DropdownItem key="delete" className="text-danger" color="danger">
 												  Delete file
 												</DropdownItem>
 											  </DropdownMenu>
-											</Dropdown></TableCell>
+											</Dropdown>
+											<ModalCustomerEdit isOpen={showEditModal} closeModal={() => setShowEditModal(false)}/></TableCell>
 						</TableRow>
 					))}
 						

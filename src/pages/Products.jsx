@@ -2,6 +2,7 @@ import React,{ useEffect, useState } from 'react';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import SideBar from '../components/SideBar.jsx';
+import ModalProductEdit from './modal/ModalProductEdit.jsx';
 import { axiosInstance } from '../lib/axios.js';
 import ModalProductCreate from './modal/ModalProductCreate.jsx';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,6 +10,7 @@ import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell
 import { NotAuth } from '../hoc/authDataHoc.jsx';
 
 function Products() {
+	const [showModalEdit, setShowModalEdit] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const dispatch = useDispatch()
 	const setProductData = (products) => {
@@ -21,13 +23,13 @@ function Products() {
 	const products = useSelector((state) => state.products.products);
 	console.log(products)
 	
+	
 	const getProducts = async () => {
 		try{
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
 			const response = await axiosInstance.get("/products", { headers });
-			console.log(response.data.data)
 			setProductData(response.data.data)
 		}catch (error) {
 			console.log(error.message)
@@ -36,6 +38,7 @@ function Products() {
 	useEffect(() => {
 		getProducts()
 	}, []);
+	
 	
 	return (
 	<>
@@ -78,17 +81,17 @@ function Products() {
 										</Button>
 									</DropdownTrigger>
 										<DropdownMenu aria-label="Static Actions">
-											<DropdownItem key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
+											<DropdownItem onPress={() => setShowModalEdit(true)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
 											<DropdownItem key="delete" className="text-danger" color="danger">
 												  Delete file
 											</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
+									<ModalProductEdit isOpen={showModalEdit} closeModal={()=> setShowModalEdit(false)}/>
 								</TableCell>
 							</TableRow>
 						)
-					})}
-						
+					})}	
 					</TableBody>
 				</Table>
 			</div>
