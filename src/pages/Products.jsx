@@ -48,7 +48,7 @@ function Products() {
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar Transaksi</h1>
 					<Button onPress={() => setShowModal(true)}>Daftar produk baru</Button>
-					<ModalProductCreate isOpen={showModal} closeModal={() => setShowModal(false)} />
+					<ModalProductCreate isOpen={showModal} onOpenChange={setShowModal} closeModal={() => setShowModal(false)} />
 			</div>
 			<div className="pb-[5rem]">
 				<Table>
@@ -87,7 +87,7 @@ function Products() {
 											</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
-									<ModalProductEdit isOpen={showModalEdit} closeModal={()=> setShowModalEdit(false)}/>
+									<ModalProductEdit isOpen={showModalEdit} onOpenChange={setShowModalEdit} closeModal={()=> setShowModalEdit(false)}/>
 								</TableCell>
 							</TableRow>
 						)

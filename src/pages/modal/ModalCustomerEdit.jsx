@@ -1,10 +1,11 @@
 import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { Select, SelectItem, Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter} from '@nextui-org/react';
 
-const ModalCustomerEdit = ({ isOpen, closeModal }) => {
+const ModalCustomerEdit = ({ isOpen, onOpenChange, closeModal }) => {
 	return (
 		<>
-			<Modal isOpen={isOpen}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} >
 				<ModalContent>
 					<ModalHeader>Edit pelanggan</ModalHeader>
 					<ModalBody>

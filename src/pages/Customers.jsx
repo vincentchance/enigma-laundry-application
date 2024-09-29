@@ -61,7 +61,7 @@ function Customers() {
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar nama pelanggan</h1>
 					<Button onPress={() => setShowModal(true)}>Daftar pelanggan baru</Button> {/*buat Modal disini untuk menambahkan pelanggan baru*/}
-					<ModalCustomerCreate isOpen={showModal} closeModal={closeModal} />
+					<ModalCustomerCreate isOpen={showModal} onOpenChange={setShowModal} closeModal={closeModal} />
 			</div>
 			<div className="pb-[5rem]">
 				<Table>
@@ -98,7 +98,7 @@ function Customers() {
 												</DropdownItem>
 											  </DropdownMenu>
 											</Dropdown>
-											<ModalCustomerEdit isOpen={showEditModal} closeModal={() => setShowEditModal(false)}/></TableCell>
+											<ModalCustomerEdit isOpen={showEditModal} onOpenChange={setShowEditModal} closeModal={() => setShowEditModal(false)}/></TableCell>
 						</TableRow>
 					))}
 						

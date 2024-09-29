@@ -1,10 +1,10 @@
 import React from 'react';
 import { Select, SelectItem, Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter} from '@nextui-org/react';
 
-const ModalProductEdit = ({ isOpen, closeModal }) => {
+const ModalProductEdit = ({ isOpen, onOpenChange, closeModal }) => {
 	return (
 		<>
-			<Modal isOpen={isOpen}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					<ModalHeader>Edit produk</ModalHeader>
 					<ModalBody>

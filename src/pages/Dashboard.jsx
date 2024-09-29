@@ -199,7 +199,7 @@ function Dashboard() {
 				<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-2xl">Daftar Transaksi</h1>
 					<Button onPress={()=> setShowModal(true)}>Tambah transaksi</Button>
-					<Modal isOpen={showModal}>
+					<Modal isOpen={showModal} onOpenChange={setShowModal}>
 						<ModalContent>
 						{() => (
 						<>

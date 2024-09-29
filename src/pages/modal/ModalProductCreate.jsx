@@ -11,7 +11,7 @@ const createProductSchema = z.object({
 	price: z.number().min(5000, "harga minimal dari 5000"),
 	type: z.string().nonempty('kolom ini harus dipilih')
 })
-function ModalProductCreate({ isOpen, closeModal }) {
+function ModalProductCreate({ isOpen, onOpenChange, closeModal }) {
 		const token = useSelector((state) => state.auth.authData.token)
 		const dispatch = useDispatch();
 		const form = useForm({
@@ -45,7 +45,7 @@ function ModalProductCreate({ isOpen, closeModal }) {
 		
 	return (
 		<>
-			<Modal isOpen={isOpen}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					<ModalHeader arial-label="daftar pelanggan baru">
 						Daftar paket baru

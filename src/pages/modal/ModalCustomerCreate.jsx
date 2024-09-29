@@ -13,7 +13,7 @@ const createCustomerSchema = z.object({
 	address: z.string().min(12, "alamat harus diisi dengan lengkap"),
 })
 
-function ModalCustomerCreate({ isOpen, closeModal }) {
+function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 		const token = useSelector((state) => state.auth.authData.token)
 		console.log(token)
 		const form = useForm({
@@ -43,7 +43,7 @@ function ModalCustomerCreate({ isOpen, closeModal }) {
 	
 	return (
 		<>
-			<Modal isOpen={isOpen}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
 					<ModalHeader arial-label="daftar pelanggan baru">
 						Daftar pelanggan baru
