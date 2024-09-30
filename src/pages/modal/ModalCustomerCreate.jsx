@@ -28,8 +28,6 @@ function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 				}
 				console.log(data)
 				const sender = await axiosInstance.post("/customers", data, { headers })
-				const response = sender.data.data
-				console.log(response)
 					if(sender.status === 201) {
 						setTimeout(() => {
 							closeModal()

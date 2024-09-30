@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Select, SelectItem, Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter} from '@nextui-org/react';
+import { useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod"
+import { axiosInstance } from "../../lib/axios.js";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 
 const editProductSchema = z.object({
@@ -10,7 +12,7 @@ const editProductSchema = z.object({
 	type: z.string()
 })
 const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
-	console.log(product)
+	const token = useSelector((state) => state.auth.authData.token)
 	const form = useForm({
 		defaultValues: {
 				name: "",
@@ -23,12 +25,26 @@ const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
 	
 	const satuanBerat = [ "Kg", "Pcs"]
 	
-	const editProduct = (data) => {
-		console.log(data)
+	const editProduct = async data => {
+		try {
+			const headers = {
+					Authorization: `Bearer ${token}`
+			};
+			const sender = await axiosInstance.put("/products", data, { headers })
+			if(sender.status === 200){
+				setTimeout(() => {
+					closeModal()
+					location.reload()
+				}, 200)
+			}
+		} catch(error){
+			console.log(error.message)
+		}
 	}
 	
 	useEffect(() => {
 		if (product) {
+			form.setValue("id", product.id);
 			form.setValue("name", product.name);
 			form.setValue("price", product.price);
 			form.setValue("type", product.type);
@@ -41,6 +57,21 @@ const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
 				<ModalContent>
 					<ModalHeader>Edit Produk</ModalHeader>
 					<ModalBody className="gap-5 mx-5 mb-2">
+						<div>
+							<label className="font-semibold">Id Produk</label>
+							<Controller
+								name="id"
+								control={form.control}
+								render={({ field, fieldState }) => (
+										<Input {...field} 
+										isDisabled
+										isInvalid={Boolean(fieldState.error)}
+										errorMessage={fieldState.error?.message}
+										/>
+									)
+								}
+							/>
+						</div>
 						<div>
 							<label className="font-semibold">Paket laundry</label>
 							<Controller
