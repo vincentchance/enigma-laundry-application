@@ -23,9 +23,9 @@ function Customers() {
 	function closeModal() {
 		setShowModal(false)
 	}
-	function handleEditModal(){
+	function handleEditModal(customer){
 		setShowEditModal(true);
-		setSelectedCustomer(null);
+		setSelectedCustomer(customer);
 	}
 	const dispatch = useDispatch()
 	const setCustomerData = (customers) => {
@@ -92,13 +92,13 @@ function Customers() {
 											</Button>
 										</DropdownTrigger>
 											<DropdownMenu aria-label="Static Actions">
-												<DropdownItem onPress={handleEditModal} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
+												<DropdownItem onPress={() => handleEditModal(customer)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
 												<DropdownItem key="delete" className="text-danger" color="danger">
 												  Delete file
 												</DropdownItem>
 											  </DropdownMenu>
 											</Dropdown>
-											<ModalCustomerEdit isOpen={showEditModal} onOpenChange={setShowEditModal} closeModal={() => setShowEditModal(false)}/></TableCell>
+											<ModalCustomerEdit isOpen={showEditModal} onOpenChange={setShowEditModal} closeModal={() => setShowEditModal(false)} customer={selectedCustomer} /></TableCell>
 						</TableRow>
 					))}
 						

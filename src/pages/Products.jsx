@@ -12,6 +12,7 @@ import { NotAuth } from '../hoc/authDataHoc.jsx';
 function Products() {
 	const [showModalEdit, setShowModalEdit] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const [selectedProduct, setSelectedProduct] = useState(null);
 	const dispatch = useDispatch()
 	const setProductData = (products) => {
 		dispatch({
@@ -21,8 +22,10 @@ function Products() {
 	}
 	const token = useSelector((state) => state.auth.authData.token);
 	const products = useSelector((state) => state.products.products);
-	console.log(products)
-	
+	const handleEditProduct = (pro) => {
+		setSelectedProduct(pro)
+		setShowModalEdit(true)
+	}
 	
 	const getProducts = async () => {
 		try{
@@ -81,13 +84,13 @@ function Products() {
 										</Button>
 									</DropdownTrigger>
 										<DropdownMenu aria-label="Static Actions">
-											<DropdownItem onPress={() => setShowModalEdit(true)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
+											<DropdownItem onPress={() => handleEditProduct(product)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
 											<DropdownItem key="delete" className="text-danger" color="danger">
 												  Delete file
 											</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
-									<ModalProductEdit isOpen={showModalEdit} onOpenChange={setShowModalEdit} closeModal={()=> setShowModalEdit(false)}/>
+									<ModalProductEdit isOpen={showModalEdit} onOpenChange={setShowModalEdit} closeModal={()=> setShowModalEdit(false)} product={selectedProduct}/>
 								</TableCell>
 							</TableRow>
 						)
