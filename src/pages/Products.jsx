@@ -21,6 +21,7 @@ function Products() {
 		})
 	}
 	const token = useSelector((state) => state.auth.authData.token);
+	const role = useSelector((state) => state.auth.authData.role);
 	const products = useSelector((state) => state.products.products);
 	const handleEditProduct = (pro) => {
 		setSelectedProduct(pro)
@@ -38,6 +39,21 @@ function Products() {
 			console.log(error.message)
 		}
 	}
+	
+	const deleteProduct = async (id) => {
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+			}
+			const result = await axiosInstance.delete(`/products/${id}`, { headers });
+			
+			if(result.status === 204){
+				location.reload()
+			}
+		} catch (error){
+			console.log(error.message)
+		} 
+	}
 	useEffect(() => {
 		getProducts()
 	}, []);
@@ -50,7 +66,7 @@ function Products() {
 			<Navbar />
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar Transaksi</h1>
-					<Button onPress={() => setShowModal(true)}>Daftar produk baru</Button>
+					<Button onPress={() => setShowModal(true) } className={ role === "admin" ? "" : "invisible" }>Daftar produk baru</Button>
 					<ModalProductCreate isOpen={showModal} onOpenChange={setShowModal} closeModal={() => setShowModal(false)} />
 			</div>
 			<div className="pb-[5rem]">
@@ -85,7 +101,7 @@ function Products() {
 									</DropdownTrigger>
 										<DropdownMenu aria-label="Static Actions">
 											<DropdownItem onPress={() => handleEditProduct(product)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
-											<DropdownItem key="delete" className="text-danger" color="danger">
+											<DropdownItem onPress={() => deleteProduct(product.id)} key="delete" className="text-danger" color="danger">
 												  Delete file
 											</DropdownItem>
 										</DropdownMenu>

@@ -36,7 +36,7 @@ function Customers() {
 	}
 	const customers = useSelector((state) => state.customer.customers)
 	const token = useSelector((state) => state.auth.authData.token);
-	console.log(customers)
+	const role = useSelector((state) => state.auth.authData.role);
 	
 	const getCustomers = async () => {
 		try {
@@ -50,6 +50,21 @@ function Customers() {
 		}
 	}
 	
+	const deleteCustomer = async (id) => {
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+			}
+			const result = await axiosInstance.delete(`/customers/${id}`, { headers });
+			
+			if(result.status === 204){
+				location.reload()
+			}
+		} catch (error){
+			console.log(error.message)
+		} 
+	}
+	
 	useEffect(() => {
 		getCustomers()
 	}, [])
@@ -60,7 +75,7 @@ function Customers() {
 			<Navbar />
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar nama pelanggan</h1>
-					<Button onPress={() => setShowModal(true)}>Daftar pelanggan baru</Button> {/*buat Modal disini untuk menambahkan pelanggan baru*/}
+					<Button onPress={() => setShowModal(true)} className={ role === "admin" ? "" : "invisible"}>Daftar pelanggan baru</Button> {/*buat Modal disini untuk menambahkan pelanggan baru*/}
 					<ModalCustomerCreate isOpen={showModal} onOpenChange={setShowModal} closeModal={closeModal} />
 			</div>
 			<div className="pb-[5rem]">
@@ -93,7 +108,7 @@ function Customers() {
 										</DropdownTrigger>
 											<DropdownMenu aria-label="Static Actions">
 												<DropdownItem onPress={() => handleEditModal(customer)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
-												<DropdownItem key="delete" className="text-danger" color="danger">
+												<DropdownItem onPress={() => deleteCustomer(customer.id)} key="delete" className="text-danger" color="danger">
 												  Delete file
 												</DropdownItem>
 											  </DropdownMenu>
