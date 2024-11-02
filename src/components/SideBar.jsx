@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom'
 function SideBar(){
 	const location = useLocation();
 	const authData = useSelector((state) => state.auth.authData)
-	
+	const role = useSelector((state) => state.auth.authData.role);
 	const isActive = (path) => location.pathname.startsWith(path);
 	return (
 		<div className="md:w-64 md-mx:w-[13rem] bg-white border-3 fixed h-full">
@@ -16,7 +16,13 @@ function SideBar(){
 			</div>
 			<hr/>
 			<ul className="mt-3 font-bold">
-				<li className="text-[17px] pl-2 mb-1"> DASHBOARD </li>
+				<li className="text-[17px] pl-2 mb-2"> DASHBOARD </li>
+				<Link to={`/employee/${authData.username}`}>
+					<li className={`mb-2 rounded py-2  ${ role === "admin" ? "" : "hidden"} ${isActive('/employee') ? 'bg-blue-500 text-white': ''} hover:bg-blue-500 hover:text-white`}>
+						<FaListCheck className="inline-block w-6 h-6 mr-2 -mt-2 ml-2"></FaListCheck>
+						Daftar Karyawan
+					</li>
+				</Link>
 				<Link to={`/dashboard/${authData.username}`}>
 					<li className={`mb-2 rounded py-2  ${isActive('/dashboard') ? 'bg-blue-500 text-white': ''} hover:bg-blue-500 hover:text-white`}>
 						<FaListCheck className="inline-block w-6 h-6 mr-2 -mt-2 ml-2"></FaListCheck>

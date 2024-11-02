@@ -72,11 +72,11 @@ function Products() {
 			<div className="pb-[5rem]">
 				<Table>
 					<TableHeader>
-						<TableColumn>Kode produk</TableColumn>
-						<TableColumn>Nama paket</TableColumn>
-						<TableColumn>Harga</TableColumn>
-						<TableColumn>Type</TableColumn>
-						<TableColumn>Pengaturan</TableColumn>
+						<TableColumn><span className="font-bold text-lg">Kode produk</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Nama paket</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Harga</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Type</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Pengaturan</span></TableColumn>
 					</TableHeader>
 					<TableBody>
 					{ products.map(( product, index) => {

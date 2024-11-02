@@ -275,9 +275,9 @@ function Dashboard() {
 					<div className="pb-[5rem]">
 						<Table aria-label="transaction list table">
 							<TableHeader>
-								<TableColumn>Kode Pelanggan</TableColumn>
-								<TableColumn>Nama Pelanggan</TableColumn>
-								<TableColumn>Tabel Transaksi</TableColumn>
+								<TableColumn><span className="font-bold text-lg">Kode Pelanggan</span></TableColumn>
+								<TableColumn><span className="font-bold text-lg">Nama Pelanggan</span></TableColumn>
+								<TableColumn><span className="font-bold text-lg">Tabel Transaksi</span></TableColumn>
 							</TableHeader>
 							<TableBody>
 							{ Object.values(transactions).map((customer, index) => {
@@ -315,11 +315,11 @@ function Dashboard() {
 					<div className="pb-[5rem]">
 						<Table aria-label="transaction detail table">
 							<TableHeader>
-								<TableColumn>Kode Transaksi</TableColumn>
-								<TableColumn>Tanggal Transaksi</TableColumn>
-								<TableColumn>Paket Laundry</TableColumn>
-								<TableColumn>Qty</TableColumn>
-								<TableColumn>Total Bayar</TableColumn>
+								<TableColumn><span className="font-bold text-lg">Kode Transaksi</span></TableColumn>
+								<TableColumn><span className="font-bold text-lg">Tanggal Transaksi</span></TableColumn>
+								<TableColumn><span className="font-bold text-lg">Paket Laundry</span></TableColumn>
+								<TableColumn><span className="font-bold text-lg">Qty</span></TableColumn>
+								<TableColumn><span className="font-bold text-lg">Total Bayar</span></TableColumn>
 							</TableHeader>
 							<TableBody>
 							{ selectedCustomer?.transactions.map((transaction, index) => {

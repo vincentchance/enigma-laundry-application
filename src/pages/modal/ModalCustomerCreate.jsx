@@ -15,7 +15,6 @@ const createCustomerSchema = z.object({
 
 function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 		const token = useSelector((state) => state.auth.authData.token)
-		console.log(token)
 		const form = useForm({
 			resolver: zodResolver(createCustomerSchema),
 			mode: "onChange"
