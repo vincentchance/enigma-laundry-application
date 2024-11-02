@@ -70,7 +70,7 @@ function LoginPage() {
 	<div>
 	<NavbarEnigma />
 		<div>
-			<div className="flex items-center justify-center h-[35rem] bg-secondary">
+			<div className="flex items-center justify-center h-[43rem] bg-secondary">
 				<Card className="w-[400px] mt-[-5rem]">
 				<CardHeader className="flex items-center justify-center font-bold text-2xl text-primary">
 				LOGIN

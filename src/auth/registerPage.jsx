@@ -22,7 +22,7 @@ const RegisterFormSchema = z.object({
 function RegisterPage () {
 	const [showPassword, setShowPassword] = useState(false);
 	
-	function toggleCheckBoxChange(){
+	function revealPassword(){
 		setShowPassword(!showPassword)
 	}
 	
@@ -123,7 +123,7 @@ function RegisterPage () {
 						</label>
 						<Checkbox
 						isSelected={showPassword}
-						onChange={toggleCheckBoxChange}
+						onChange={revealPassword}
 						size="sm"
 						className="font-semibold"
 						>
