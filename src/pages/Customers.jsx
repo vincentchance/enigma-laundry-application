@@ -82,8 +82,8 @@ function Customers() {
 				<Table>
 					<TableHeader>
 						<TableColumn className="md-mx:hidden"><span className="font-bold text-lg">Kode pelanggan</span></TableColumn>
-						<TableColumn><span className="font-bold text-lg">Nama pelanggan</span></TableColumn>
-						<TableColumn><span className="font-bold text-lg">Nomor hp pelanggan</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Nama</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Nomor hp</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Alamat</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Pengaturan</span></TableColumn>
 					</TableHeader>
