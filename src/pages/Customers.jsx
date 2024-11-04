@@ -81,7 +81,7 @@ function Customers() {
 			<div className="pb-[5rem]">
 				<Table>
 					<TableHeader>
-						<TableColumn><span className="font-bold text-lg">Kode pelanggan</span></TableColumn>
+						<TableColumn className="md-mx:hidden"><span className="font-bold text-lg">Kode pelanggan</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Nama pelanggan</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Nomor hp pelanggan</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Alamat</span></TableColumn>
@@ -90,7 +90,7 @@ function Customers() {
 					<TableBody>
 					{customers.map((customer, index) => (
 						<TableRow key={index}>
-							<TableCell>
+							<TableCell className="md-mx:hidden">
 								<span className={`${(index + 1) % 2 === 0 ? 'bg-red-400' : 'bg-teal-300' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
 									{customer.id.slice(0,8).toUpperCase()}
 								</span>

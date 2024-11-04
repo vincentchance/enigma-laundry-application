@@ -72,7 +72,7 @@ function Products() {
 			<div className="pb-[5rem]">
 				<Table>
 					<TableHeader>
-						<TableColumn><span className="font-bold text-lg">Kode produk</span></TableColumn>
+						<TableColumn className="md-mx:hidden"><span className="font-bold text-lg">Kode produk</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Nama paket</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Harga</span></TableColumn>
 						<TableColumn><span className="font-bold text-lg">Type</span></TableColumn>
@@ -82,7 +82,7 @@ function Products() {
 					{ products.map(( product, index) => {
 						return (
 							<TableRow key={index}>
-								<TableCell>
+								<TableCell className="md-mx:hidden">
 								<span className={`${(index + 1) % 2 === 0 ? 'bg-green-400' : 'bg-blue-700' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
 									{product.id.slice(0, 8).toUpperCase()}
 								</span>
