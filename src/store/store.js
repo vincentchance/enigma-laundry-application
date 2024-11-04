@@ -4,11 +4,13 @@ import { customerReducer } from "./customerReducer";
 import { transactionReducer } from "./transactionReducer";
 import { productReducers } from "./productReducer";
 import { employeeReducers } from "./employeeReducer";
+import { userReducer } from './userReducer';
 
 export const reducers = combineReducers({
 	auth: authReducer,
 	customer: customerReducer,
 	bill: transactionReducer,
 	products: productReducers,
-	employees: employeeReducers
+	employees: employeeReducers,
+	newUser: userReducer,
 })

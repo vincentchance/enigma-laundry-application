@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import SideBar from '../components/SideBar.jsx';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
+import ModalRegisterNewEmployee from './modal/ModalRegisterNewEmployee.jsx';
 import { axiosInstance } from '../lib/axios.js';
 import { NotAuth } from '../hoc/authDataHoc.jsx';
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
@@ -27,6 +28,7 @@ function MemberEmployee(){
 			payload: { employees },
 		})
 	}
+	const newUserData = useSelector((state) => state.newUser.newUser );
 	const employees = useSelector((state) => state.employees.employees);
 	console.log(employees);
 	const getEmployee = async () => {
@@ -36,7 +38,6 @@ function MemberEmployee(){
 			};
 			const response = await axiosInstance.get("/users", { headers });
 			setEmployeeData(response.data.data);
-			console.log(response.data.data);
 		} catch (error){
 			console.log(error.message);
 		}
@@ -53,7 +54,7 @@ function MemberEmployee(){
 				<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Manajemen Karyawan</h1>
 					<Button onPress={() => setShowRegisterModal(true) }>Daftar karyawan baru</Button>
-					{/*<ModalProductCreate isOpen={showModal} onOpenChange={setShowModal} closeModal={() => setShowModal(false)} />*/}
+					<ModalRegisterNewEmployee isOpen={showRegisterModal} onOpenChange={setShowRegisterModal} closeModal={() => setShowRegisterModal(false)} />
 				</div>
 				<div className="pb-[5rem]">
 					<Table>

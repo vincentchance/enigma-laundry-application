@@ -108,8 +108,18 @@ function Customers() {
 										</DropdownTrigger>
 											<DropdownMenu aria-label="Static Actions">
 												<DropdownItem onPress={() => handleEditModal(customer)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
-												<DropdownItem onPress={() => deleteCustomer(customer.id)} key="delete" className="text-danger" color="danger">
-												  Delete file
+												<DropdownItem 
+													onPress={() => {
+														const confirmed = window.confirm("Are you sure you want to delete this customer?");
+														if (confirmed) {
+															deleteCustomer(customer.id);
+															}
+														}} 
+													key="delete" 
+													className="text-danger" 
+													color="danger"
+													>	
+													Delete file
 												</DropdownItem>
 											  </DropdownMenu>
 											</Dropdown>
