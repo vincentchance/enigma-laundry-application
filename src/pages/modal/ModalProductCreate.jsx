@@ -52,7 +52,7 @@ function ModalProductCreate({ isOpen, onOpenChange, closeModal }) {
 					</ModalHeader>
 					<ModalBody className="gap-5 mx-5 mb-2">
 						<div>
-							<label className="font-semibold">Paket laundry</label>
+							<label className="font-semibold">Paket laundry:</label>
 							<Controller
 								name="name"
 								control={form.control}
@@ -67,7 +67,7 @@ function ModalProductCreate({ isOpen, onOpenChange, closeModal }) {
 							/>
 						</div>
 						<div>
-							<label className="font-semibold">Harga</label>
+							<label className="font-semibold">Harga:</label>
 							<Controller
 								name="price"
 								control={form.control}
@@ -84,7 +84,7 @@ function ModalProductCreate({ isOpen, onOpenChange, closeModal }) {
 							/>
 						</div>
 						<div className="mb-4">
-							<label className="font-semibold">Tipe (satuan)</label>
+							<label className="font-semibold">Tipe (satuan):</label>
 							<Controller
 										name="type"
 										control={form.control}

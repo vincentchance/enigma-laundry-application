@@ -58,7 +58,7 @@ const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
 					<ModalHeader>Edit Produk</ModalHeader>
 					<ModalBody className="gap-5 mx-5 mb-2">
 						<div>
-							<label className="font-semibold">Id Produk</label>
+							<label className="font-semibold">Id Produk:</label>
 							<Controller
 								name="id"
 								control={form.control}
@@ -73,7 +73,7 @@ const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
 							/>
 						</div>
 						<div>
-							<label className="font-semibold">Paket laundry</label>
+							<label className="font-semibold">Paket laundry:</label>
 							<Controller
 								name="name"
 								control={form.control}
@@ -87,7 +87,7 @@ const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
 							/>
 						</div>
 						<div>
-							<label className="font-semibold">Harga</label>
+							<label className="font-semibold">Harga:</label>
 							<Controller
 								name="price"
 								control={form.control}
@@ -103,7 +103,7 @@ const ModalProductEdit = ({ isOpen, onOpenChange, closeModal, product }) => {
 							/>
 						</div>
 						<div>
-							<label className="font-semibold">Satuan</label>
+							<label className="font-semibold">Satuan:</label>
 							<Controller
 								name="type"
 								control={form.control}

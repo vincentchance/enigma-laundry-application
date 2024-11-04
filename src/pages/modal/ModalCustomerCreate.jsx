@@ -15,7 +15,6 @@ const createCustomerSchema = z.object({
 
 function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 		const token = useSelector((state) => state.auth.authData.token)
-		console.log(token)
 		const form = useForm({
 			resolver: zodResolver(createCustomerSchema),
 			mode: "onChange"
@@ -48,7 +47,7 @@ function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 					</ModalHeader>
 					<ModalBody className="gap-5 mx-5 mb-2">
 						<div>
-							<label className="font-semibold">Nama pelanggan</label>
+							<label className="font-semibold">Nama pelanggan:</label>
 							<Controller
 								name="name"
 								control={form.control}
@@ -63,14 +62,13 @@ function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 							/>
 						</div>
 						<div>
-							<label className="font-semibold">Nomor telepon pelanggan</label>
+							<label className="font-semibold">Nomor telepon pelanggan:</label>
 							<Controller
 								name="phoneNumber"
 								control={form.control}
 								render={({ field, fieldState }) => (
 										<Input {...field} 
 										placeholder="0812######"
-										type="number"
 										isInvalid={Boolean(fieldState.error)}
 										errorMessage={fieldState.error?.message}
 										/>
@@ -79,7 +77,7 @@ function ModalCustomerCreate({ isOpen, onOpenChange, closeModal }) {
 							/>
 						</div>
 						<div className="mb-5">
-							<label className="font-semibold">Alamat pelanggan</label>
+							<label className="font-semibold">Alamat pelanggan:</label>
 							<Controller
 									name="address"
 									control={form.control}

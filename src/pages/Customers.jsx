@@ -71,7 +71,7 @@ function Customers() {
 	return (
 	<>
 		<SideBar />
-		<div className="md-mx:ml-52 md:ml-64">
+		<div className="md-mx:w-full md:ml-64">
 			<Navbar />
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar nama pelanggan</h1>
@@ -81,16 +81,16 @@ function Customers() {
 			<div className="pb-[5rem]">
 				<Table>
 					<TableHeader>
-						<TableColumn>Kode pelanggan</TableColumn>
-						<TableColumn>Nama pelanggan</TableColumn>
-						<TableColumn>Nomor hp pelanggan</TableColumn>
-						<TableColumn>Alamat</TableColumn>
-						<TableColumn>pengaturan</TableColumn>
+						<TableColumn className="md-mx:hidden"><span className="font-bold text-lg">Kode pelanggan</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Nama pelanggan</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Nomor hp pelanggan</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Alamat</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Pengaturan</span></TableColumn>
 					</TableHeader>
 					<TableBody>
 					{customers.map((customer, index) => (
 						<TableRow key={index}>
-							<TableCell>
+							<TableCell className="md-mx:hidden">
 								<span className={`${(index + 1) % 2 === 0 ? 'bg-red-400' : 'bg-teal-300' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
 									{customer.id.slice(0,8).toUpperCase()}
 								</span>
@@ -108,8 +108,18 @@ function Customers() {
 										</DropdownTrigger>
 											<DropdownMenu aria-label="Static Actions">
 												<DropdownItem onPress={() => handleEditModal(customer)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
-												<DropdownItem onPress={() => deleteCustomer(customer.id)} key="delete" className="text-danger" color="danger">
-												  Delete file
+												<DropdownItem 
+													onPress={() => {
+														const confirmed = window.confirm("Are you sure you want to delete this customer?");
+														if (confirmed) {
+															deleteCustomer(customer.id);
+															}
+														}} 
+													key="delete" 
+													className="text-danger" 
+													color="danger"
+													>	
+													Delete file
 												</DropdownItem>
 											  </DropdownMenu>
 											</Dropdown>

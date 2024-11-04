@@ -62,7 +62,7 @@ function Products() {
 	return (
 	<>
 		<SideBar />
-		<div className="md-mx:ml-52 md:ml-64">
+		<div className="md-mx:w-full md:ml-64">
 			<Navbar />
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar Transaksi</h1>
@@ -72,17 +72,17 @@ function Products() {
 			<div className="pb-[5rem]">
 				<Table>
 					<TableHeader>
-						<TableColumn>Kode produk</TableColumn>
-						<TableColumn>Nama paket</TableColumn>
-						<TableColumn>Harga</TableColumn>
-						<TableColumn>Type</TableColumn>
-						<TableColumn>Pengaturan</TableColumn>
+						<TableColumn className="md-mx:hidden"><span className="font-bold text-lg">Kode produk</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Nama paket</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Harga</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Type</span></TableColumn>
+						<TableColumn><span className="font-bold text-lg">Pengaturan</span></TableColumn>
 					</TableHeader>
 					<TableBody>
 					{ products.map(( product, index) => {
 						return (
 							<TableRow key={index}>
-								<TableCell>
+								<TableCell className="md-mx:hidden">
 								<span className={`${(index + 1) % 2 === 0 ? 'bg-green-400' : 'bg-blue-700' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
 									{product.id.slice(0, 8).toUpperCase()}
 								</span>
@@ -101,8 +101,18 @@ function Products() {
 									</DropdownTrigger>
 										<DropdownMenu aria-label="Static Actions">
 											<DropdownItem onPress={() => handleEditProduct(product)} key="edit">Edit file</DropdownItem> //tambah Modal disini untuk edit
-											<DropdownItem onPress={() => deleteProduct(product.id)} key="delete" className="text-danger" color="danger">
-												  Delete file
+											<DropdownItem 
+												onPress={() => {
+													const confirmed = window.confirm("Are you sure you want to delete this product?");
+													if (confirmed) {
+														deleteProduct(product.id);
+													}			
+												}} 
+												key="delete" 
+												className="text-danger" 
+												color="danger"
+												>
+												Delete file
 											</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
