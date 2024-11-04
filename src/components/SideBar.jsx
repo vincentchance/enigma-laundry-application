@@ -10,7 +10,7 @@ function SideBar(){
 	const role = useSelector((state) => state.auth.authData.role);
 	const isActive = (path) => location.pathname.startsWith(path);
 	return (
-		<div className="md:w-64 md-mx:w-[13rem] bg-white border-3 fixed h-full">
+		<div className="md:w-64 md-mx:hidden bg-white border-3 fixed h-full">
 			<div className="my-2 mb-4 ml-1">
 				<h1 className="text-2xl font-bold text-blue-500">Enigma Laundry</h1>
 			</div>

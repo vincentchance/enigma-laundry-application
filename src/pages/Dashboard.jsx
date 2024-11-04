@@ -192,7 +192,7 @@ function Dashboard() {
 	return (
 	<>
 		<SideBar />
-		<div className="md-mx:ml-52 md:ml-64">
+		<div className="md-mx:w-full md:ml-64">
 				<Navbar />
 			{showBillDetail === 'daftar transaksi' ? (
 			<>

@@ -62,7 +62,7 @@ function Products() {
 	return (
 	<>
 		<SideBar />
-		<div className="md-mx:ml-52 md:ml-64">
+		<div className="md-mx:w-full md:ml-64">
 			<Navbar />
 			<div className="flex bg-white justify-between p-5">
 					<h1 className="font-semibold text-xl">Daftar Transaksi</h1>
