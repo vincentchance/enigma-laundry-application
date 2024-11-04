@@ -196,7 +196,7 @@ function Dashboard() {
 				<Navbar />
 			{showBillDetail === 'daftar transaksi' ? (
 			<>
-				<div className="flex bg-white justify-between p-5">
+				<div className="flex bg-white justify-between p-7">
 					<h1 className="font-semibold text-2xl">Daftar Transaksi</h1>
 					<Button onPress={()=> setShowModal(true)}>Tambah transaksi</Button>
 					<Modal isOpen={showModal} onOpenChange={setShowModal}>
@@ -272,7 +272,7 @@ function Dashboard() {
 							</ModalContent>
 						</Modal>
 					</div>
-					<div className="pb-[5rem]">
+					<div className="pb-[7rem]">
 						<Table aria-label="transaction list table">
 							<TableHeader>
 								<TableColumn><span className="font-bold text-lg">Kode Pelanggan</span></TableColumn>
@@ -315,7 +315,7 @@ function Dashboard() {
 					<div className="pb-[5rem]">
 						<Table aria-label="transaction detail table">
 							<TableHeader>
-								<TableColumn><span className="font-bold text-lg">Kode Transaksi</span></TableColumn>
+								<TableColumn className="md-mx:hidden"><span className="font-bold text-lg">Kode Transaksi</span></TableColumn>
 								<TableColumn><span className="font-bold text-lg">Tanggal Transaksi</span></TableColumn>
 								<TableColumn><span className="font-bold text-lg">Paket Laundry</span></TableColumn>
 								<TableColumn><span className="font-bold text-lg">Qty</span></TableColumn>
@@ -325,7 +325,7 @@ function Dashboard() {
 							{ selectedCustomer?.transactions.map((transaction, index) => {
 								return (
 									<TableRow key={index + 1}>
-										<TableCell>
+										<TableCell className="md-mx:hidden">
 											<span className={`${(index + 1) % 2 === 0 ? 'bg-red-400' : 'bg-teal-300' } rounded-2xl p-1 m-1 border-t-1 text-white`}>
 												{`TRL-${transaction.id.slice(0,8).match(/\d+/g).join('')}`}
 											</span>
